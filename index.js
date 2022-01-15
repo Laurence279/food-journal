@@ -24,7 +24,34 @@ const DietJournalSchema = new mongoose.Schema({
   }]
 });
 
+const arr = {
+  Date: "Mon Nov 08 2021",
+  Morning: [1,2,3],
+  Afternoon: [2,3,4],
+  Evening: [4,2,6]
+}
+
 const JournalUser = new mongoose.model('JournalUser', DietJournalSchema);
+
+JournalUser.updateOne(
+  {
+    "user": "Laury",
+    "days.Date": "Mon Nov 08 2021"
+
+  },
+  {
+    "$set": {
+      "days.$": arr
+
+    }
+  }, function (err, results) {
+  if (err) {
+      console.log(err);
+  } 
+    
+    console.log(results)
+  }
+    )
 
 // const user = new JournalUser({user:"Laur",days:[{Date: "Wed Nov 10 2021",Morning:[{name:"Apples", type: ["Fruit"]}],Afternoon:[],Evening:[]}]})
 // user.save();
