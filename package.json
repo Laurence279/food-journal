@@ -1,0 +1,25 @@
+{
+  "name": "food-journal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Laurence279/food-journal.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Laurence279/food-journal/issues"
+  },
+  "homepage": "https://github.com/Laurence279/food-journal#readme",
+  "dependencies": {
+    "dotenv": "^12.0.3",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.6"
+  }
+}

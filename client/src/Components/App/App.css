@@ -1,0 +1,179 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html {
+  font-family: "Montserrat", sans-serif;
+}
+body {
+  background: #eee;
+  overflow-x: hidden;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  text-align: center;
+}
+
+header {
+  background-color: #f5ba13;
+  margin: auto 0;
+  padding: 16px 32px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.date-btn {
+  padding: 0 0.5em;
+  margin: 0.25em;
+  font-size: 1.75rem;
+}
+
+.user-btn{
+  padding: 0 0.5em;
+  margin: 0.25em;
+  font-size: 1.25rem;
+}
+
+form {
+  position: relative;
+  max-width: 400px;
+  margin: 30px auto 20px auto;
+  background: #fff;
+  padding: 15px;
+  border-radius: 7px;
+  box-shadow: 0 1px 5px rgb(138, 137, 137);
+}
+form input,
+form textarea {
+  width: 100%;
+  border: none;
+  padding: 4px;
+  outline: none;
+  font-family: inherit;
+  resize: none;
+}
+form button {
+  position: absolute;
+  right: 18px;
+  bottom: -36px;
+  background: #f5ba13;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  outline: none;
+  font-size: 1.125rem;
+}
+form select {
+  text-align: left;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#date {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.25em;
+}
+
+.ToD-title {
+  margin: 1em 0;
+}
+
+.today-title {
+  font-size: 1.5rem;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  background-color: lightgoldenrodyellow;
+  border: solid black 1px;
+  cursor: default;
+}
+
+.food-type-container {
+  margin: 1em 0;
+  display: grid;
+  grid: 75px 75px 75px / auto auto auto auto;
+  grid-gap: 0.25em;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.food-type-text {
+  margin-top: 1em;
+  font-size: 0.75rem;
+  text-align: left;
+}
+
+.food-icon {
+  font-size: 1.5rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.selected {
+  background-color: yellow;
+}
+
+.entry-container {
+  margin: 1em auto;
+  border: solid black 1px;
+  background-color: yellow;
+  max-width: 400px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.entry-text {
+  flex: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+}
+
+.entry-text:first-child {
+  border-right: solid black 1px;
+}
+
+.delete-btn {
+  position: absolute;
+  right: -18px;
+  background: #f5ba13;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  outline: none;
+}
