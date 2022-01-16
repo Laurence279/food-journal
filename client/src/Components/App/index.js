@@ -5,6 +5,40 @@ import TimeOfDay from "../TimeOfDay";
 import './App.css';
 
 
+const data = {
+  user: "Laur",
+  days: [
+    {
+      date: "Sun Jan 16 2022",
+      morning: [
+        {
+          id: (Math.random().toString(36).substring(2, 18)),
+          foodDescription: "Apple",
+          foodTypes: ["Fruit"]
+        },
+        {
+          id: (Math.random().toString(36).substring(2, 18)),
+          foodDescription: "Chocolate Bar",
+          foodTypes: ["Chocolate"]
+        },
+        {
+          id: (Math.random().toString(36).substring(2, 18)),
+          foodDescription: "Yoghurt",
+          foodTypes: ["Dairy"]
+        }
+      ],
+      afternoon: [
+        {
+          id: (Math.random().toString(36).substring(2, 18)),
+          foodDescription: "Crisps",
+          foodTypes: ["Bread"]
+        }
+      ],
+      evening: []
+    }
+  ]
+}
+
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
@@ -25,9 +59,9 @@ const reducer = (state, action) => {
     case types.DATE:  // Set the current day/date that this entry contains
       return { ...state, date: action.value }
     case types.ENTRIES_TODAY: 
-    
-    console.log("Get entries for today...")
-    return state
+    if(!action.value) return state
+    console.log("Get entries for today...", action.value)
+    return {...state, entriesToday: action.value}
 
     case types.ADD_ENTRY: // Add an entry to today's log
       const timeOfDayToAddItem = action.value.timeOfDay
@@ -41,9 +75,8 @@ const reducer = (state, action) => {
         .slice(0, indexToRemove),...arrayToRemoveFrom.slice(indexToRemove + 1)]}}
     case types.UPDATE_TOTAL_ENTRIES: // Update all entries stored for this user..
   
-    
-    console.log("Updating Entries")
-        return state
+    console.log("Updating Entries", action.value)
+        return {...state, entriesTotal: action.value}
 
     default:
       return state;
@@ -62,8 +95,33 @@ const initialState = {
   entriesTotal: []
 }
 
+// function getDateFromEntries(entries, date){
+
+//   //Returns an object containing the entries for the specified date found in the user's document.
+//   //Returns empty entry object if not found
+
+//   const emptyEntry = {
+//     date: date,
+//     morning: [],
+//     afternoon: [],
+//     evening: []
+//   }
+
+//   if(!entries) return 
+
+//   const foundMatchIndex = entries.findIndex((entry)=>{
+//     return entry.date == date
+//   })
+//   if(foundMatchIndex === -1) return emptyEntry
+//   return entries[foundMatchIndex]
+
+// }
+
+
 
 function App() {
+
+
 
   //State Management
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -87,32 +145,67 @@ function App() {
 
   }, [state.entriesToday]) 
 
+  const getDateFromEntries = useCallback((entries, date)=>{
+    
+  //Returns an object containing the entries for the specified date found in the user's document.
+  //Returns empty entry object if not found
+
+  const emptyEntry = {
+    date: date,
+    morning: [],
+    afternoon: [],
+    evening: []
+  }
+
+  if(!entries) return 
+
+  const foundMatchIndex = entries.findIndex((entry)=>{
+    return entry.date == date
+  })
+  if(foundMatchIndex === -1) return emptyEntry
+  return entries[foundMatchIndex]
+
+
+  }, [state.entriesTotal]) 
+
   // Run when date is changed
 
   useEffect(()=>{
-    const entries = {
-      date: state.date,
-      morning: [],
-      afternoon: [],
-      evening: []
-    }
-    dispatch({type: types.ENTRIES_TODAY, value: entries})
-  },[state.date])
+    //const todaysEntry = getDateFromEntries(state.entriesTotal.days,state.date)
+    console.log(state.entriesTotal)
+    //dispatch({type: types.ENTRIES_TODAY, value: todaysEntry})
+  },[state.date, state.entriesTotal])
   
 
-  //Run when today's entries change
-
-  useEffect(()=>{
-    dispatch({type: types.UPDATE_TOTAL_ENTRIES})
-    setEmpty(checkIfEntriesEmpty());
-  },[state.entriesToday, checkIfEntriesEmpty])
 
 
   //Run on load
 
   useEffect(()=>{
+    async function fetchData(){
+        dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: data.days})
+    }
+    fetchData()
 
   },[])
+
+  
+  //Run when all entries change
+
+  useEffect(()=>{
+      console.log("Run when all entries change", state.entriesTotal)
+      const todaysEntry = getDateFromEntries(state.entriesTotal,state.date)
+     dispatch({type:types.ENTRIES_TODAY, value:todaysEntry});
+  },[state.entriesTotal, state.date])
+
+
+  
+  //Run when today's entries change
+
+  useEffect(()=>{
+    // dispatch({type: types.UPDATE_TOTAL_ENTRIES})
+    // setEmpty(checkIfEntriesEmpty());
+  },[state.entriesToday, checkIfEntriesEmpty])
 
   // Managing today's entry
 
