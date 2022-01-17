@@ -4,6 +4,10 @@ import Day from "../Day";
 import TimeOfDay from "../TimeOfDay";
 import './App.css';
 
+const dataOther = {
+  user: "Other",
+  days: []
+}
 
 const data = {
   user: "Laur",
@@ -69,6 +73,7 @@ const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
 
 const types = {
+  USERS: 'USERS',
   USERNAME: 'USERNAME',
   DATE: 'DATE',
   ENTRIES_TODAY: 'ENTRIES_TODAY',
@@ -80,6 +85,8 @@ const types = {
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case types.USERS: // Set all users found in db..
+      return { ...state, users: action.value}
     case types.USERNAME: // Set the username
       return { ...state, username: action.value }
     case types.DATE:  // Set the current day/date that this entry contains
@@ -93,6 +100,7 @@ const reducer = (state, action) => {
     return {...state, entriesToday: todaysEntry}
 
     case types.ADD_ENTRY: // Add an entry to today's log
+    
       const timeOfDayToAddItem = action.value.timeOfDay
       const itemToAdd = {
         id: action.value.id,
@@ -101,6 +109,7 @@ const reducer = (state, action) => {
       }
       return { ...state, entriesToday: {...state.entriesToday, [timeOfDayToAddItem]: [...state.entriesToday[timeOfDayToAddItem], itemToAdd]}} 
     case types.DELETE_ENTRY: // Remove an entry from today's log
+
       const timeOfDayToRemoveItem = action.value.timeOfDay
       const indexToRemoveDelEntry = action.value.index
       const arrayToRemoveFrom = [...state.entriesToday[timeOfDayToRemoveItem]]
@@ -131,7 +140,8 @@ const reducer = (state, action) => {
 }
 
 const initialState = {
-  username: "Laur",
+  users: [],
+  username: "",
   date: today.toDateString(),
   entriesToday: {
     date: today.toDateString(),
@@ -211,16 +221,47 @@ function App() {
 
 
 
-  //Run on load
+  //Run when username is changed
 
   useEffect(()=>{
     console.log("Fetching data...")
     async function fetchData(){
+      if(state.username === "") return
+      //Fetch data from database for user that matches state.username
+      // const response = await fetch...
+      // const data = response.json()...
+      // dispatch data.days...
+      if(state.username === "Other"){
+        dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: dataOther.days})
+      }
+      else{
         dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: data.days})
+      }
+  
+
     }
     fetchData()
+    dispatch({type:types.ENTRIES_TODAY});
+
+  },[state.username])
+
+  //Run on load
+
+  const users = [
+    "Laur",
+    "Other"
+  ]
+
+  useEffect(()=>{
+    console.log("Fetching users...")
+    async function fetchUsers(){
+        dispatch({type: types.USERS, value: users})
+    }
+    fetchUsers()
 
   },[])
+
+
 
     // Run when date is changed
 
@@ -278,6 +319,10 @@ function App() {
     dispatch({type: types.DATE, value: nextDayFromToday.toDateString()})
   }
 
+  function handleChange(event){
+    dispatch({type: types.USERNAME, value: event.target.value})
+  }
+
 
 
 
@@ -285,6 +330,11 @@ function App() {
     
         <div>
         <header>
+          <select onChange={handleChange} selected defaultValue="Select User">
+          <option defaultValue="" disabled hidden>Select User</option>
+              <option value="Laur">Laur</option>
+              <option value="Other">Other guy</option>
+            </select>
             <h1>Dietary Journal</h1>
             <h3>{state.username}</h3>
             <Day date={state.date} onPrev={onPrev} onNext={onNext} />
