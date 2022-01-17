@@ -1,72 +1,70 @@
 import React, { useEffect, useState, useCallback, useReducer } from "react";
+import InputUser from "../InputUser";
 import Input from "../Input";
 import Day from "../Day";
 import TimeOfDay from "../TimeOfDay";
+import Dropdown from "../Dropdown"
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const dataOther = {
-  user: "Other",
-  days: []
-}
+// const data = {
+//   user: "Laur",
+//   days: [
+//     {
+//       date: "Sun Jan 16 2022",
+//       morning: [
+//         {
+//           id: (Math.random().toString(36).substring(2, 18)),
+//           foodDescription: "Apple",
+//           foodTypes: ["Fruit"]
+//         },
+//         {
+//           id: (Math.random().toString(36).substring(2, 18)),
+//           foodDescription: "Chocolate Bar",
+//           foodTypes: ["Chocolate"]
+//         },
+//         {
+//           id: (Math.random().toString(36).substring(2, 18)),
+//           foodDescription: "Yoghurt",
+//           foodTypes: ["Dairy"]
+//         }
+//       ],
+//       afternoon: [
+//         {
+//           id: (Math.random().toString(36).substring(2, 18)),
+//           foodDescription: "Crisps",
+//           foodTypes: ["Bread"]
+//         }
+//       ],
+//       evening: []
+//     },
+//     {
+//       date: "Mon Jan 17 2022",
+//       morning: [
+//         {
+//           id: (Math.random().toString(36).substring(2, 18)),
+//           foodDescription: "Apple",
+//           foodTypes: ["Fruit"]
+//         }
 
-const data = {
-  user: "Laur",
-  days: [
-    {
-      date: "Sun Jan 16 2022",
-      morning: [
-        {
-          id: (Math.random().toString(36).substring(2, 18)),
-          foodDescription: "Apple",
-          foodTypes: ["Fruit"]
-        },
-        {
-          id: (Math.random().toString(36).substring(2, 18)),
-          foodDescription: "Chocolate Bar",
-          foodTypes: ["Chocolate"]
-        },
-        {
-          id: (Math.random().toString(36).substring(2, 18)),
-          foodDescription: "Yoghurt",
-          foodTypes: ["Dairy"]
-        }
-      ],
-      afternoon: [
-        {
-          id: (Math.random().toString(36).substring(2, 18)),
-          foodDescription: "Crisps",
-          foodTypes: ["Bread"]
-        }
-      ],
-      evening: []
-    },
-    {
-      date: "Mon Jan 17 2022",
-      morning: [
-        {
-          id: (Math.random().toString(36).substring(2, 18)),
-          foodDescription: "Apple",
-          foodTypes: ["Fruit"]
-        }
-
-      ],
-      afternoon: [
-        {
-          id: (Math.random().toString(36).substring(2, 18)),
-          foodDescription: "Crisps",
-          foodTypes: ["Bread"]
-        }
-      ],
-      evening: [
-        {
-          id: (Math.random().toString(36).substring(2, 18)),
-          foodDescription: "Chocolate Bar",
-          foodTypes: ["Chocolate"]
-        }
-      ]
-    }
-  ]
-}
+//       ],
+//       afternoon: [
+//         {
+//           id: (Math.random().toString(36).substring(2, 18)),
+//           foodDescription: "Crisps",
+//           foodTypes: ["Bread"]
+//         }
+//       ],
+//       evening: [
+//         {
+//           id: (Math.random().toString(36).substring(2, 18)),
+//           foodDescription: "Chocolate Bar",
+//           foodTypes: ["Chocolate"]
+//         }
+//       ]
+//     }
+//   ]
+// }
 
 const today = new Date();
 const yesterday = new Date(today);
@@ -232,10 +230,10 @@ function App() {
       // const data = response.json()...
       // dispatch data.days...
       if(state.username === "Other"){
-        dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: dataOther.days})
+        dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: []})
       }
       else{
-        dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: data.days})
+        dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: []})
       }
   
 
@@ -247,19 +245,21 @@ function App() {
 
   //Run on load
 
-  const users = [
-    "Laur",
-    "Other"
-  ]
-
   useEffect(()=>{
-    console.log("Fetching users...")
-    async function fetchUsers(){
-        dispatch({type: types.USERS, value: users})
-    }
     fetchUsers()
-
   },[])
+
+  async function fetchUsers(){
+    console.log("Fetching users...")
+    const response = await fetch(`http://localhost:3000/api/users/`,{
+      mode: 'cors'
+    });
+    const data = await response.json()
+    console.log(data)
+        dispatch({type: types.USERS, value: data})
+    }
+
+
 
 
 
@@ -320,9 +320,64 @@ function App() {
   }
 
   function handleChange(event){
+    if(event.target.value === "new"){
+      handleShow()
+      event.target.value = "Select User"
+      return
+    }
+    if(event.target.value === "change"){
+      event.target.value = "TEST";
+      return
+    }
     dispatch({type: types.USERNAME, value: event.target.value})
   }
 
+
+  const [show, setShow] = useState(false);
+  
+  function handleClose(){
+    setShow(false);
+
+  } 
+  function handleShow(){
+    setShow(true);
+  } 
+
+  async function submitUser(name){
+        //Post request to server
+        console.log(`TODO: POST ${name} TO SERVER`)
+        const response = await fetch(`http://localhost:3000/api/`, {
+          method: `POST`,
+          body: JSON.stringify({
+              user: name
+          }),
+          headers: {
+              'content-type': 'application/json'
+          }
+      });
+      console.log(response)
+      handleClose()
+      await fetchUsers()
+       dispatch({type: types.USERNAME, value: name})
+      setDropdownValue(name);
+  }
+
+  function setDropdownValue(name){
+
+
+      console.log("SETTING DROPDOWN")
+     const options = document.querySelector("#dropdown").options;
+    for(let i = 0; i < options.length; i++){
+      console.log(options[i].value, name)
+      if(options[i].value == name){
+
+        options[i].selected = true
+        console.log("found");
+        return;
+      }
+  } 
+    
+}
 
 
 
@@ -330,16 +385,13 @@ function App() {
     
         <div>
         <header>
-          <select onChange={handleChange} selected defaultValue="Select User">
-          <option defaultValue="" disabled hidden>Select User</option>
-              <option value="Laur">Laur</option>
-              <option value="Other">Other guy</option>
-            </select>
+        <Dropdown handleChange={handleChange} users={state.users}/>
             <h1>Dietary Journal</h1>
             <h3>{state.username}</h3>
             <Day date={state.date} onPrev={onPrev} onNext={onNext} />
 
         </header>
+        <InputUser show={show} handleShow={handleShow} handleClose={handleClose} submitUser={submitUser}/>
         <h2 className="is-empty">{isEmpty}</h2>
         <TimeOfDay whenDeleted={deleteEntry} entryList={state.entriesToday.morning} time="Morning"/>
         <TimeOfDay whenDeleted={deleteEntry} entryList={state.entriesToday.afternoon} time="Afternoon"/>
