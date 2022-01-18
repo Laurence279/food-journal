@@ -64,7 +64,7 @@ const reducer = (state, action) => {
 
     case types.UPDATE_ENTRY_IN_TOTAL_ENTRIES: // Update one entry inside total entries stored for this user..
 
-        if(action.value.morning.length === 0 && action.value.afternoon.length === 0 && action.value.evening.length === 0) return state
+        //if(action.value.morning.length === 0 && action.value.afternoon.length === 0 && action.value.evening.length === 0) return state
         const indexToRemoveUpdateTotal = findIndexInEntries(state.entriesTotal, action.value.date);
         if(indexToRemoveUpdateTotal === -1){
           return {...state, entriesTotal: [...state.entriesTotal, action.value]}
@@ -235,7 +235,6 @@ function App() {
   // Managing today's entry
 
   function addEntry(item){
-    
     if (item.foodDescription === "" && item.foodTypes.length === 0) {
       return;
     }
@@ -246,8 +245,6 @@ function App() {
       foodTypes: item.foodTypes.length === 0 ? ["Other"] : item.foodTypes
     };
     dispatch({type: types.ADD_ENTRY, value: foodObject})
-
-    
   }
 
   function deleteEntry(item){
