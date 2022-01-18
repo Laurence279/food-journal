@@ -9,11 +9,7 @@ app.use(express.urlencoded({
   extended: true
 }));
 app.use(express.json())
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+app.use(cors());
 mongoose.connect(`mongodb+srv://Laur:${process.env.P}@cluster0.lsmiq.mongodb.net/${process.env.DB}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -42,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 // Fetch all users...
 
 app.get('/api/users', async (req, res) => {
+  console.log("fetch users")
   const results = await JournalUser.find({})
   res.json(results.map(result => result.user))
 
@@ -76,7 +73,7 @@ app.post('/api/', async (req,res)=>{
 // Update an entry for a user..
 
 app.post('/api/:user', async (req,res) => {
-  console.log("Put request received")
+  console.log("Post request received")
   const user = req.params.user;
   const updatedDay = {
     date: req.body.date,
