@@ -75,8 +75,8 @@ app.post('/api/', async (req,res)=>{
 
 // Update an entry for a user..
 
-app.put('/api/:user', async (req,res) => {
-
+app.post('/api/:user', async (req,res) => {
+  console.log("Put request received")
   const user = req.params.user;
   const updatedDay = {
     date: req.body.date,
@@ -88,7 +88,7 @@ app.put('/api/:user', async (req,res) => {
   // Does this day already exist in db?
   const found = await JournalUser.find({
     "user": user,
-    "days.Date": updatedDay.date
+    "days.date": updatedDay.date
   })
 
 
@@ -118,7 +118,7 @@ app.put('/api/:user', async (req,res) => {
     
     {
       "user": user,
-      "days.Date": updatedDay.date
+      "days.date": updatedDay.date
     },
     {
       "$set": {

@@ -7,65 +7,6 @@ import Dropdown from "../Dropdown"
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// const data = {
-//   user: "Laur",
-//   days: [
-//     {
-//       date: "Sun Jan 16 2022",
-//       morning: [
-//         {
-//           id: (Math.random().toString(36).substring(2, 18)),
-//           foodDescription: "Apple",
-//           foodTypes: ["Fruit"]
-//         },
-//         {
-//           id: (Math.random().toString(36).substring(2, 18)),
-//           foodDescription: "Chocolate Bar",
-//           foodTypes: ["Chocolate"]
-//         },
-//         {
-//           id: (Math.random().toString(36).substring(2, 18)),
-//           foodDescription: "Yoghurt",
-//           foodTypes: ["Dairy"]
-//         }
-//       ],
-//       afternoon: [
-//         {
-//           id: (Math.random().toString(36).substring(2, 18)),
-//           foodDescription: "Crisps",
-//           foodTypes: ["Bread"]
-//         }
-//       ],
-//       evening: []
-//     },
-//     {
-//       date: "Mon Jan 17 2022",
-//       morning: [
-//         {
-//           id: (Math.random().toString(36).substring(2, 18)),
-//           foodDescription: "Apple",
-//           foodTypes: ["Fruit"]
-//         }
-
-//       ],
-//       afternoon: [
-//         {
-//           id: (Math.random().toString(36).substring(2, 18)),
-//           foodDescription: "Crisps",
-//           foodTypes: ["Bread"]
-//         }
-//       ],
-//       evening: [
-//         {
-//           id: (Math.random().toString(36).substring(2, 18)),
-//           foodDescription: "Chocolate Bar",
-//           foodTypes: ["Chocolate"]
-//         }
-//       ]
-//     }
-//   ]
-// }
-
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
@@ -98,19 +39,22 @@ const reducer = (state, action) => {
     return {...state, entriesToday: todaysEntry}
 
     case types.ADD_ENTRY: // Add an entry to today's log
-    
+      if(state.username === "") return state
       const timeOfDayToAddItem = action.value.timeOfDay
       const itemToAdd = {
         id: action.value.id,
         foodDescription: action.value.foodDescription,
         foodTypes: action.value.foodTypes
       }
+      updateEntry(state.username, {...state.entriesToday, [timeOfDayToAddItem]: [...state.entriesToday[timeOfDayToAddItem], itemToAdd]} )
       return { ...state, entriesToday: {...state.entriesToday, [timeOfDayToAddItem]: [...state.entriesToday[timeOfDayToAddItem], itemToAdd]}} 
     case types.DELETE_ENTRY: // Remove an entry from today's log
-
+    if(state.username === "") return state
       const timeOfDayToRemoveItem = action.value.timeOfDay
       const indexToRemoveDelEntry = action.value.index
       const arrayToRemoveFrom = [...state.entriesToday[timeOfDayToRemoveItem]]
+      updateEntry(state.username, {...state.entriesToday, [timeOfDayToRemoveItem]: [...arrayToRemoveFrom
+        .slice(0, indexToRemoveDelEntry),...arrayToRemoveFrom.slice(indexToRemoveDelEntry + 1)]} )
       return { ...state, entriesToday: {...state.entriesToday, [timeOfDayToRemoveItem]: [...arrayToRemoveFrom
         .slice(0, indexToRemoveDelEntry),...arrayToRemoveFrom.slice(indexToRemoveDelEntry + 1)]}}
     case types.UPDATE_TOTAL_ENTRIES: // Update all entries stored for this user..
@@ -148,6 +92,19 @@ const initialState = {
     evening: []
   },
   entriesTotal: []
+}
+
+
+async function updateEntry(user, entry){
+  const response = await fetch(`http://localhost:3000/api/${user}`, {
+    method: `POST`,
+    mode: 'cors',
+    body: JSON.stringify(entry),
+    headers: {
+        'content-type': 'application/json'
+    }
+});
+console.log(response)
 }
 
 
@@ -222,24 +179,20 @@ function App() {
   //Run when username is changed
 
   useEffect(()=>{
-    console.log("Fetching data...")
     async function fetchData(){
       if(state.username === "") return
-      //Fetch data from database for user that matches state.username
+      // Fetch data from database for user that matches state.username
       // const response = await fetch...
       // const data = response.json()...
       // dispatch data.days...
-      if(state.username === "Other"){
-        dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: []})
-      }
-      else{
-        dispatch({type: types.UPDATE_TOTAL_ENTRIES, value: []})
-      }
-  
-
+      const response = await fetch(`http://localhost:3000/api/${state.username}`);
+      const data = await response.json()
+      console.log("data",data)
+      dispatch({type:types.UPDATE_TOTAL_ENTRIES, value: data.days})
+      dispatch({type:types.ENTRIES_TODAY});
     }
     fetchData()
-    dispatch({type:types.ENTRIES_TODAY});
+
 
   },[state.username])
 
@@ -251,12 +204,10 @@ function App() {
 
   async function fetchUsers(){
     console.log("Fetching users...")
-    const response = await fetch(`http://localhost:3000/api/users/`,{
-      mode: 'cors'
-    });
+    const response = await fetch(`http://localhost:3000/api/users`);
     const data = await response.json()
-    console.log(data)
-        dispatch({type: types.USERS, value: data})
+    console.log("data",data)
+    dispatch({type: types.USERS, value: data})
     }
 
 
@@ -274,10 +225,12 @@ function App() {
   //Run when today's entries change
 
   useEffect(()=>{
-    console.log("Today's entries changed")
+    console.log("Today's entries changed", state.entriesToday)
     dispatch({type: types.UPDATE_ENTRY_IN_TOTAL_ENTRIES, value: state.entriesToday})
     setEmpty(checkIfEntriesEmpty());
   },[state.entriesToday, checkIfEntriesEmpty])
+
+  
 
   // Managing today's entry
 
@@ -293,9 +246,12 @@ function App() {
       foodTypes: item.foodTypes.length === 0 ? ["Other"] : item.foodTypes
     };
     dispatch({type: types.ADD_ENTRY, value: foodObject})
+
+    
   }
 
   function deleteEntry(item){
+    console.log(item)
     dispatch({type: types.DELETE_ENTRY, value: item})
   }
 
@@ -369,7 +325,7 @@ function App() {
      const options = document.querySelector("#dropdown").options;
     for(let i = 0; i < options.length; i++){
       console.log(options[i].value, name)
-      if(options[i].value == name){
+      if(options[i].value === name){
 
         options[i].selected = true
         console.log("found");
