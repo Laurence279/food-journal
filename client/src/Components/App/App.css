@@ -179,10 +179,16 @@ form select {
   outline: none;
 }
 
-#dropdown{
-  position:absolute;
-  left:15px;
-  top: 20px; 
-  width: 130px;
-  padding: 0.25em;
+
+
+@media (min-width: 1000px) {
+
+  #dropdown{
+    position:absolute;
+    left:15px;
+    top: 20px; 
+    width: 130px;
+    padding: 0.25em;
+  }
+
 }
