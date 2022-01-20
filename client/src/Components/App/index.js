@@ -5,8 +5,8 @@ import Day from "../Day";
 import TimeOfDay from "../TimeOfDay";
 import Dropdown from "../Dropdown"
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
@@ -95,7 +95,7 @@ const initialState = {
 
 
 async function updateEntry(user, entry){
-  const response = await fetch(`http://localhost:3001/api/${user}`, {
+  const response = await fetch(`http://localhost:3000/api/${user}`, {
     method: `POST`,
     mode: 'cors',
     body: JSON.stringify(entry),
@@ -184,7 +184,7 @@ function App() {
       // const response = await fetch...
       // const data = response.json()...
       // dispatch data.days...
-      const response = await fetch(`http://localhost:3001/api/${state.username}`);
+      const response = await fetch(`http://localhost:3000/api/${state.username}`);
       const data = await response.json()
       console.log("data",data)
       dispatch({type:types.UPDATE_TOTAL_ENTRIES, value: data.days})
@@ -203,7 +203,7 @@ function App() {
 
   async function fetchUsers(){
     console.log("Fetching users...")
-    const response = await fetch(`http://localhost:3001/api/users`);
+    const response = await fetch(`http://localhost:3000/api/users`);
     const data = await response.json()
     console.log("data",data)
     dispatch({type: types.USERS, value: data})
@@ -298,7 +298,7 @@ function App() {
   async function submitUser(name){
         //Post request to server
         console.log(`TODO: POST ${name} TO SERVER`)
-        const response = await fetch(`http://localhost:3001/api/`, {
+        const response = await fetch(`http://localhost:3000/api/`, {
           method: `POST`,
           body: JSON.stringify({
               user: name
@@ -343,6 +343,7 @@ function App() {
             <Day date={state.date} onPrev={onPrev} onNext={onNext} />
 
         </header>
+        <div id="content-wrap">
         <InputUser show={show} handleShow={handleShow} handleClose={handleClose} submitUser={submitUser}/>
         <h2 className="is-empty">{isEmpty}</h2>
         <TimeOfDay whenDeleted={deleteEntry} entryList={state.entriesToday.morning} time="Morning"/>
@@ -350,6 +351,8 @@ function App() {
         <TimeOfDay whenDeleted={deleteEntry} entryList={state.entriesToday.evening} time="Evening"/>
 
         <Input whenSubmit={addEntry}/>
+        </div>
+       
 
         </div>
     

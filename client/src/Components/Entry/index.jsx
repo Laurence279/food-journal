@@ -15,10 +15,10 @@ function Entry(props) {
 
   return (
     <div className="entry-container">
-      <p className="entry-text">
+      <p style={{margin: "0"}} className="entry-text">
         <strong>{foodTypes}</strong>
       </p>
-      <p className="entry-text">{entry}</p>
+      <p style={{margin: "0"}} className="entry-text">{entry}</p>
       <button onClick={deleteEntry} className="delete-btn">
         X
       </button>

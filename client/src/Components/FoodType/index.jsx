@@ -23,7 +23,7 @@ function FoodType(props) {
   );
   return (
     <div className={`box ${selected}`} onClick={handleClick}>
-      <p>{props.name}</p>
+      <p style={{marginBottom: "0"}}>{props.name}</p>
       <span
         className="food-icon"
         role="img"

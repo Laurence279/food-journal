@@ -5,7 +5,7 @@ function Input(props) {
   const [food, setFood] = useState("");
   const [time, setTime] = useState("morning");
   const [foodTypes, setFoodTypes] = useState([]);
-  const [foodTypeVisible, setFoodTypeVisible] = useState("hidden");
+  const [foodTypeVisible, setFoodTypeVisible] = useState("");
 
   function submit(event) {
     event.preventDefault();
@@ -18,11 +18,11 @@ function Input(props) {
     setFoodTypes([]);
   }
 
-  document.addEventListener("click", function (e) {
-    if (!e.target.closest("#form")) {
-      hideFoodTypes();
-    }
-  });
+  // document.addEventListener("click", function (e) {
+  //   if (!e.target.closest("#form")) {
+  //     hideFoodTypes();
+  //   }
+  // });
 
   function handleChangeFood(event) {
     const value = event.target.value;
@@ -39,6 +39,7 @@ function Input(props) {
   }
 
   function handleFocus(event) {
+
     setFoodTypeVisible(function () {
       return "";
     });
@@ -71,8 +72,9 @@ function Input(props) {
   }
 
   return (
-    <div>
+    <div id="form-container">
       <form id="form">
+
         <select
           name="time-of-day"
           id="time"
@@ -87,14 +89,9 @@ function Input(props) {
           <option value="afternoon">Afternoon</option>
           <option value="evening">Evening</option>
         </select>
-        <input
-          onFocus={handleFocus}
-          onChange={handleChangeFood}
-          value={food}
-          style={{ fontSize: "1.5rem" }}
-          placeholder="What did you eat?"
-          maxLength="50"
-        ></input>
+
+
+          <h3 style={{textAlign: "left"}}>What did you eat?</h3>
 
         <p className={`food-type-text ${foodTypeVisible}`}>
           Select all that apply.
@@ -125,7 +122,7 @@ function Input(props) {
             onSelected={select}
           />
           <FoodType
-            name="Bread"
+            name="Carbs"
             icon="🍞"
             currentFoodTypes={foodTypes}
             onSelected={select}
@@ -173,8 +170,18 @@ function Input(props) {
             currentFoodTypes={foodTypes}
             onSelected={select}
           />
+          
         </div>
+        <input
+          onFocus={handleFocus}
+          onChange={handleChangeFood}
+          value={food}
+          style={{ fontSize: "1.5rem" }}
+          placeholder="Enter a description.."
+          maxLength="50"
+        ></input>
         <button onClick={submit}>Add</button>
+
       </form>
     </div>
   );

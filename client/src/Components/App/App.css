@@ -19,6 +19,7 @@ h4 {
   text-align: center;
 }
 
+
 header {
   position:relative;
   background-color: #f5ba13;
@@ -30,20 +31,24 @@ header {
 }
 
 header h1 {
-  font-size: 1.75rem;
   font-weight: 600;
+  margin: 1.5em 0 0.75em 0;
 }
 
 .date-btn {
   padding: 0 0.5em;
-  margin: 0.25em;
-  font-size: 1.75rem;
+
+  font-size: 1.5rem;
 }
 
 .user-btn{
   padding: 0 0.5em;
   margin: 0.25em;
   font-size: 1.25rem;
+}
+
+#content-wrap{
+  margin: 0 1.5em 4em 1.5em;
 }
 
 form {
@@ -67,7 +72,7 @@ form textarea {
 form button {
   position: absolute;
   right: 18px;
-  bottom: -36px;
+  bottom: -34px;
   background: #f5ba13;
   color: #fff;
   border: none;
@@ -86,11 +91,11 @@ form select {
 .container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 #date {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin: 0.25em;
 }
@@ -108,7 +113,6 @@ form select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0;
   background-color: lightgoldenrodyellow;
   border: solid black 1px;
   cursor: default;
@@ -179,16 +183,16 @@ form select {
   outline: none;
 }
 
+#dropdown{
+  position:absolute;
+  left:10px;
+  top: 10px; 
 
+  width: 130px;
+  padding: 0.25em;
+}
 
 @media (min-width: 1000px) {
 
-  #dropdown{
-    position:absolute;
-    left:15px;
-    top: 20px; 
-    width: 130px;
-    padding: 0.25em;
-  }
 
 }
