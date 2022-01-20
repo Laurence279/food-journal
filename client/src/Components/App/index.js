@@ -95,7 +95,7 @@ const initialState = {
 
 
 async function updateEntry(user, entry){
-  const response = await fetch(`/api/${user}`, {
+  const response = await fetch(`http://localhost:3001/api/${user}`, {
     method: `POST`,
     mode: 'cors',
     body: JSON.stringify(entry),
@@ -184,7 +184,7 @@ function App() {
       // const response = await fetch...
       // const data = response.json()...
       // dispatch data.days...
-      const response = await fetch(`/api/${state.username}`);
+      const response = await fetch(`http://localhost:3001/api/${state.username}`);
       const data = await response.json()
       console.log("data",data)
       dispatch({type:types.UPDATE_TOTAL_ENTRIES, value: data.days})
@@ -203,7 +203,7 @@ function App() {
 
   async function fetchUsers(){
     console.log("Fetching users...")
-    const response = await fetch(`/api/users`);
+    const response = await fetch(`http://localhost:3001/api/users`);
     const data = await response.json()
     console.log("data",data)
     dispatch({type: types.USERS, value: data})
@@ -298,7 +298,7 @@ function App() {
   async function submitUser(name){
         //Post request to server
         console.log(`TODO: POST ${name} TO SERVER`)
-        const response = await fetch(`/api/`, {
+        const response = await fetch(`http://localhost:3001/api/`, {
           method: `POST`,
           body: JSON.stringify({
               user: name
