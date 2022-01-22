@@ -185,7 +185,7 @@ function App() {
       // const response = await fetch...
       // const data = response.json()...
       // dispatch data.days...
-      const response = await fetch(`/api/${state.username}`);
+      const response = await fetch(`http://localhost:3000/api/${state.username}`);
       const data = await response.json()
       dispatch({type:types.UPDATE_TOTAL_ENTRIES, value: data.days})
       dispatch({type:types.ENTRIES_TODAY});
@@ -366,6 +366,9 @@ if(isAuthed.auth){
   dispatch({type: types.USERNAME, value: username})
   setDropdownValue(username);
   handleClosePass()
+}
+else{
+  throw new Error("Incorrect Password.")
 }
 }
     return (
