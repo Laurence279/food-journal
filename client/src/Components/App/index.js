@@ -96,7 +96,7 @@ const initialState = {
 
 
 async function updateEntry(user, entry){
-  const response = await fetch(`/api/${user}`, {
+  const response = await fetch(`http://localhost:3000/api/${user}`, {
     method: `POST`,
     mode: 'cors',
     body: JSON.stringify(entry),
@@ -202,7 +202,7 @@ function App() {
   },[])
 
   async function fetchUsers(){
-    const response = await fetch(`/api/users`);
+    const response = await fetch(`http://localhost:3000/api/users`);
     const data = await response.json()
     dispatch({type: types.USERS, value: data})
     }
@@ -314,7 +314,7 @@ function App() {
         if(state.users.includes(name)){
           throw new Error("Username already exists!")
         } 
-        const response = await fetch(`/api/`, {
+        const response = await fetch(`http://localhost:3000/api/`, {
           method: `POST`,
           body: JSON.stringify({
               user: name,
@@ -351,7 +351,7 @@ function App() {
 
 async function submitUserPass(username, password){
   //Post request to server
-  const response = await fetch(`/api/auth`, {
+  const response = await fetch(`http://localhost:3000/api/auth`, {
     method: `POST`,
     body: JSON.stringify({
         username: username,
