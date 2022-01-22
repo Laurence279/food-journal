@@ -6,8 +6,8 @@ import Day from "../Day";
 import TimeOfDay from "../TimeOfDay";
 import Dropdown from "../Dropdown"
 import './App.css';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {Modal, Button} from 'react-bootstrap'
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
@@ -283,6 +283,7 @@ function App() {
 
   const [show, setShow] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [showUpdates, setShowUpdates] = useState(false);
   const [attemptedUser, setAttemptedUser] = useState("")
   
   function handleClose(){
@@ -299,6 +300,13 @@ function App() {
   } 
   function handleShowPass(){
     setShowPass(true);
+  } 
+  function handleCloseUpdates(){
+    setShowUpdates(false);
+
+  } 
+  function handleShowUpdates(){
+    setShowUpdates(true);
   } 
 
   async function submitUser(name, password){
@@ -338,6 +346,9 @@ function App() {
 }
 
 
+
+
+
 async function submitUserPass(username, password){
   //Post request to server
   const response = await fetch(`/api/auth`, {
@@ -357,16 +368,35 @@ if(isAuthed.auth){
   handleClosePass()
 }
 }
-
-
-
     return (
     
         <div>
         <header>
         <Dropdown handleChange={handleChange} users={state.users}/>
+        <button className="p-1" id="update-btn" onClick={handleShowUpdates}>Update Notes!</button>
+
+
+        <Modal show={showUpdates} onHide={handleCloseUpdates}>
+          <Modal.Header closeButton>
+            <Modal.Title>Update Notes</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+          <h5>Version 1.0</h5>
+          <h6>22/01/2022</h6>
+          <br/>
+          <p>Added passwords for users. Had to delete all usernames, so you'll need to re-create yours again, sorry! I still have your old entries, so they aren't lost, I will write them in manually after I see you've set a password to your name. Happy journaling! :)</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseUpdates}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+
             <h1>Dietary Journal</h1>
             <h3>{state.username}</h3>
+
             <Day  date={state.date} onPrev={onPrev} onNext={onNext} />
 
         </header>
