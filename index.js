@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 require('dotenv').config()
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 app.use(express.urlencoded({
   extended: true
@@ -17,6 +20,7 @@ mongoose.connect(`mongodb+srv://Laur:${process.env.P}@cluster0.lsmiq.mongodb.net
 
 const DietJournalSchema = new mongoose.Schema({
   user: String,
+  password: String,
   days: [{
     date: String,
     morning: [],
@@ -35,12 +39,33 @@ const JournalUser = new mongoose.model('JournalUser', DietJournalSchema);
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+// User Auth.. 
+
+app.post('/api/auth', async (req,res) => {
+  const auth = await checkPassword(req.body.username, req.body.password)
+  res.json({auth: auth})
+})
+
+async function checkPassword(user, password) {
+  const username = await JournalUser.findOne({user:user})
+  if(!username.password) return console.warn("User or password not found")
+  const hash = username.password
+  const passwordCheck = await bcrypt.compareSync(password, hash);
+  return passwordCheck;
+}
+
 // Fetch all users...
 
 app.get('/api/users', async (req, res) => {
-  console.log("fetch users")
   const results = await JournalUser.find({})
-  res.json(results.map(result => result.user))
+  res.json(
+    results.filter((result)=>{
+      return result.user
+    }).map((result)=>{
+      return result.user
+    })
+    
+    )
 
 });
 
@@ -52,16 +77,22 @@ app.get('/api/:user', async (req, res) => {
 
 
   const response = await JournalUser.findOne({user:userToFind})
-  res.json(response);
+  const {id, user, days} = response
+  res.json({id,user,days});
 });
+
+
 
 
 
 // Create new user..
 app.post('/api/', async (req,res)=>{
+      // Hash password
+      const password = bcrypt.hashSync(req.body.password, saltRounds);
   const user = await new JournalUser(
     {
       user: req.body.user,
+      password: password,
       days: []
     })
   user.save();

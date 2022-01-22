@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useReducer } from "react";
 import InputUser from "../InputUser";
 import Input from "../Input";
+import PasswordUser from "../PasswordUser"
 import Day from "../Day";
 import TimeOfDay from "../TimeOfDay";
 import Dropdown from "../Dropdown"
@@ -186,7 +187,6 @@ function App() {
       // dispatch data.days...
       const response = await fetch(`http://localhost:3000/api/${state.username}`);
       const data = await response.json()
-      console.log("data",data)
       dispatch({type:types.UPDATE_TOTAL_ENTRIES, value: data.days})
       dispatch({type:types.ENTRIES_TODAY});
     }
@@ -202,10 +202,8 @@ function App() {
   },[])
 
   async function fetchUsers(){
-    console.log("Fetching users...")
     const response = await fetch(`http://localhost:3000/api/users`);
     const data = await response.json()
-    console.log("data",data)
     dispatch({type: types.USERS, value: data})
     }
 
@@ -277,15 +275,15 @@ function App() {
       event.target.value = "Select User"
       return
     }
-    if(event.target.value === "change"){
-      event.target.value = "TEST";
-      return
-    }
-    dispatch({type: types.USERNAME, value: event.target.value})
+    setAttemptedUser(event.target.value);
+    setShowPass(true);
+    event.target.value = "Select User"
   }
 
 
   const [show, setShow] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [attemptedUser, setAttemptedUser] = useState("")
   
   function handleClose(){
     setShow(false);
@@ -295,29 +293,37 @@ function App() {
     setShow(true);
   } 
 
-  async function submitUser(name){
+  function handleClosePass(){
+    setShowPass(false);
+
+  } 
+  function handleShowPass(){
+    setShowPass(true);
+  } 
+
+  async function submitUser(name, password){
         //Post request to server
-        console.log(`TODO: POST ${name} TO SERVER`)
+        if(state.users.includes(name)){
+          throw new Error("Username already exists!")
+        } 
         const response = await fetch(`http://localhost:3000/api/`, {
           method: `POST`,
           body: JSON.stringify({
-              user: name
+              user: name,
+              password: password
           }),
           headers: {
               'content-type': 'application/json'
           }
       });
-      console.log(response)
       handleClose()
       await fetchUsers()
-       dispatch({type: types.USERNAME, value: name})
+      dispatch({type: types.USERNAME, value: name})
       setDropdownValue(name);
   }
 
   function setDropdownValue(name){
 
-
-      console.log("SETTING DROPDOWN")
      const options = document.querySelector("#dropdown").options;
     for(let i = 0; i < options.length; i++){
       console.log(options[i].value, name)
@@ -332,6 +338,28 @@ function App() {
 }
 
 
+async function submitUserPass(username, password){
+  //Post request to server
+  console.log(`POST ${username} and ${password} TO SERVER`)
+  const response = await fetch(`http://localhost:3000/api/auth`, {
+    method: `POST`,
+    body: JSON.stringify({
+        username: username,
+        password: password
+          }),
+    headers: {
+        'content-type': 'application/json'
+    }
+});
+const isAuthed = await response.json();
+if(isAuthed.auth){
+  dispatch({type: types.USERNAME, value: username})
+  setDropdownValue(username);
+  handleClosePass()
+}
+}
+
+
 
     return (
     
@@ -340,10 +368,11 @@ function App() {
         <Dropdown handleChange={handleChange} users={state.users}/>
             <h1>Dietary Journal</h1>
             <h3>{state.username}</h3>
-            <Day date={state.date} onPrev={onPrev} onNext={onNext} />
+            <Day  date={state.date} onPrev={onPrev} onNext={onNext} />
 
         </header>
         <div id="content-wrap">
+        <PasswordUser show={showPass} username={attemptedUser} handleShow={handleShowPass} handleClose={handleClosePass} submit={submitUserPass}/>
         <InputUser show={show} handleShow={handleShow} handleClose={handleClose} submitUser={submitUser}/>
         <h2 className="is-empty">{isEmpty}</h2>
         <TimeOfDay whenDeleted={deleteEntry} entryList={state.entriesToday.morning} time="Morning"/>
