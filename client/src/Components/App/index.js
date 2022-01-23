@@ -405,7 +405,7 @@ else{
        
             <h3>{state.username || "Please Select a User.."}</h3>
 
-            <Day  date={state.date} onPrev={onPrev} onNext={onNext} />
+            <Day hidden={hideContent} date={state.date} onPrev={onPrev} onNext={onNext} />
 
         </header>
         <div hidden={hideContent} id="content-wrap">
