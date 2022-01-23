@@ -96,7 +96,7 @@ const initialState = {
 
 
 async function updateEntry(user, entry){
-  const response = await fetch(`/api/${user}`, {
+  const response = await fetch(`http://localhost:3000/api/${user}`, {
     method: `POST`,
     mode: 'cors',
     body: JSON.stringify(entry),
@@ -185,7 +185,7 @@ function App() {
       // const response = await fetch...
       // const data = response.json()...
       // dispatch data.days...
-      const response = await fetch(`/api/${state.username}`);
+      const response = await fetch(`http://localhost:3000/api/${state.username}`);
       const data = await response.json()
       dispatch({type:types.UPDATE_TOTAL_ENTRIES, value: data.days})
       dispatch({type:types.ENTRIES_TODAY});
@@ -202,7 +202,7 @@ function App() {
   },[])
 
   async function fetchUsers(){
-    const response = await fetch(`/api/users`);
+    const response = await fetch(`http://localhost:3000/api/users`);
     const data = await response.json()
     dispatch({type: types.USERS, value: data})
     }
@@ -285,6 +285,7 @@ function App() {
   const [showPass, setShowPass] = useState(false);
   const [showUpdates, setShowUpdates] = useState(false);
   const [attemptedUser, setAttemptedUser] = useState("")
+  const [hideContent, setHideContent] = useState(true);
   
   function handleClose(){
     setShow(false);
@@ -314,7 +315,7 @@ function App() {
         if(state.users.includes(name)){
           throw new Error("Username already exists!")
         } 
-        const response = await fetch(`/api/`, {
+        const response = await fetch(`http://localhost:3000/api/`, {
           method: `POST`,
           body: JSON.stringify({
               user: name,
@@ -351,7 +352,7 @@ function App() {
 
 async function submitUserPass(username, password){
   //Post request to server
-  const response = await fetch(`/api/auth`, {
+  const response = await fetch(`http://localhost:3000/api/auth`, {
     method: `POST`,
     body: JSON.stringify({
         username: username,
@@ -364,6 +365,7 @@ async function submitUserPass(username, password){
 const isAuthed = await response.json();
 if(isAuthed.auth){
   dispatch({type: types.USERNAME, value: username})
+  setHideContent(true)
   setDropdownValue(username);
   handleClosePass()
 }
@@ -375,8 +377,9 @@ else{
     
         <div>
         <header>
+        <div>
         <Dropdown handleChange={handleChange} users={state.users}/>
-        <button className="p-1" id="update-btn" onClick={handleShowUpdates}>Update Notes!</button>
+        {/* <button className="p-1" id="update-btn" onClick={handleShowUpdates}>v1.0</button>
 
 
         <Modal show={showUpdates} onHide={handleCloseUpdates}>
@@ -394,16 +397,18 @@ else{
               Close
             </Button>
           </Modal.Footer>
-        </Modal>
+        </Modal> */}
 
 
-            <h1>Dietary Journal</h1>
-            <h3>{state.username}</h3>
+            <h1 id="title">Food Journal</h1>
+        </div>
+       
+            <h3>{state.username || "Please Select a User.."}</h3>
 
             <Day  date={state.date} onPrev={onPrev} onNext={onNext} />
 
         </header>
-        <div id="content-wrap">
+        <div hidden={hideContent} id="content-wrap">
         <PasswordUser show={showPass} username={attemptedUser} handleShow={handleShowPass} handleClose={handleClosePass} submit={submitUserPass}/>
         <InputUser show={show} handleShow={handleShow} handleClose={handleClose} submitUser={submitUser}/>
         <h2 className="is-empty">{isEmpty}</h2>
