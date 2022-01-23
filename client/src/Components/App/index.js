@@ -365,7 +365,7 @@ async function submitUserPass(username, password){
 const isAuthed = await response.json();
 if(isAuthed.auth){
   dispatch({type: types.USERNAME, value: username})
-  setHideContent(true)
+  setHideContent(false)
   setDropdownValue(username);
   handleClosePass()
 }
