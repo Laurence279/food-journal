@@ -157,7 +157,7 @@ form select {
 #date {
   font-weight: 600;
   margin: 0 1em;
-
+  width: 150px;
 }
 
 .ToD-title {
