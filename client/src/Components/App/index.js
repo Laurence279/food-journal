@@ -9,6 +9,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Button} from 'react-bootstrap'
 import LoginButton from "../LoginButton"
+import { useAuth0 } from "@auth0/auth0-react";
 import LogoutButton from "../LogoutButton";
 const today = new Date();
 const yesterday = new Date(today);
@@ -375,6 +376,14 @@ else{
   throw new Error("Incorrect Password.")
 }
 }
+
+const { user, isAuthenticated, isLoading } = useAuth0();
+
+if(isLoading){
+  return (<div>Loading...</div>)
+
+}
+
     return (
     
         <div>
@@ -385,8 +394,19 @@ else{
 
             <h1 id="title">Food Journal</h1>
         </div>
-       
-            <h3>{state.username || "Please Login to Continue.."}</h3>
+
+{isAuthenticated && (
+  <h3>{user.name}</h3>
+
+
+
+)}
+
+
+{!isAuthenticated && (
+  <h3>Simple, user-friendly Food Journaling.</h3>
+)}
+
 
             <Day hidden={hideContent} date={state.date} onPrev={onPrev} onNext={onNext} />
 
