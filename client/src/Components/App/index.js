@@ -202,7 +202,7 @@ function App() {
   },[])
 
   async function fetchUsers(){
-    const response = await fetch(`/api/users`);
+    const response = await fetch(`http://localhost:3000/api/users`);
     const data = await response.json()
     dispatch({type: types.USERS, value: data})
     }
