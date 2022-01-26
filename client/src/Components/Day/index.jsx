@@ -12,14 +12,19 @@ function Day(props) {
   }
 
   return (
-    <div className="date-container" >
+    <div hidden={props.hidden} className="date-container" >
       <button className="date-btn" onClick={prev}>
-        &#9756;
+      <p>
+      {"<"}
+      </p>
+
       </button>
       <p id="date">{props.date}</p>
 
       <button className="date-btn" onClick={next}>
-        &#9758;
+      <p>
+      {">"}
+      </p>
       </button>
     </div>
   );

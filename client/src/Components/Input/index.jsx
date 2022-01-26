@@ -116,26 +116,50 @@ function Input(props) {
             onSelected={select}
           />
           <FoodType
-            name="Dairy"
-            icon="🧀"
-            currentFoodTypes={foodTypes}
-            onSelected={select}
-          />
-          <FoodType
             name="Carbs"
             icon="🍞"
             currentFoodTypes={foodTypes}
             onSelected={select}
           />
+                    <FoodType
+            name="Dairy"
+            icon="🧀"
+            currentFoodTypes={foodTypes}
+            onSelected={select}
+          />
+                    <FoodType
+            name="Takeaway"
+            icon="🍔"
+            currentFoodTypes={foodTypes}
+            onSelected={select}
+          />
+                    <FoodType
+            name="Bakery"
+            icon="🍩"
+            currentFoodTypes={foodTypes}
+            onSelected={select}
+          />
+
+
           <FoodType
             name="Dessert"
             icon="🍨"
             currentFoodTypes={foodTypes}
             onSelected={select}
           />
+
+
           <FoodType
-            name="Takeaway"
-            icon="🍔"
+            name="Chocolate"
+            icon="🍫"
+            currentFoodTypes={foodTypes}
+            onSelected={select}
+          />
+
+
+                    <FoodType
+            name="Hot Drink"
+            icon="☕"
             currentFoodTypes={foodTypes}
             onSelected={select}
           />
@@ -145,28 +169,9 @@ function Input(props) {
             currentFoodTypes={foodTypes}
             onSelected={select}
           />
-          <FoodType
+                    <FoodType
             name="Alcohol"
             icon="🍺"
-            currentFoodTypes={foodTypes}
-            onSelected={select}
-          />
-
-          <FoodType
-            name="Chocolate"
-            icon="🍫"
-            currentFoodTypes={foodTypes}
-            onSelected={select}
-          />
-          <FoodType
-            name="Sweets"
-            icon="🍬"
-            currentFoodTypes={foodTypes}
-            onSelected={select}
-          />
-          <FoodType
-            name="Bakery"
-            icon="🍩"
             currentFoodTypes={foodTypes}
             onSelected={select}
           />

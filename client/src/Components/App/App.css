@@ -19,35 +19,83 @@ h4 {
   text-align: center;
 }
 
+#title{
+  font-size: 1.375rem;
+  position:absolute;
+  top:0;
+  margin: 0.5em 0.75em;
+  left: 0;
+}
+
+#dropdown{
+  position:absolute;
+  right:10px;
+  top: 10px; 
+  border: solid black 1px;
+  width: 130px;
+  padding: 0.25em;
+  background-color:#94c4d3;
+  font-size: 0.875rem;
+}
+
+
 
 header {
   position:relative;
-  background-color: #f5ba13;
+  background-color: #67b7d6;
   margin: auto 0;
-  padding: 16px 32px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  padding: 3.5em 0 1em 0;
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.3);
   text-align: center;
   margin-bottom: 2em;
   display:flex;
   flex-direction: column;
   align-items: center;
+  border-bottom: solid #b9b9b9 1px;
 }
 
-header h1 {
-  font-weight: 600;
-  margin: 1.5em 0 0.75em 0;
+header h3{
+  margin-bottom: 0.5em;
 }
+
+
+
+
+
 
 .date-btn {
   padding: 0 0.5em;
-
+  border: solid black 2px;
+  background-color:#94c4d3;
+  border-radius: 25px;
   font-size: 1.5rem;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 45px;
+  position:relative;
 }
+
+.date-btn p{
+  margin: 0;
+}
+
+
+
+
 
 #update-btn{
   position:absolute;
+border: solid black 1px;
+background-color:#94c4d3;
   right: 10px;
   top: 10px;
+}
+
+#time{
+  border-style: none;
+  border: solid black 1px;
 }
 
 .user-btn{
@@ -79,11 +127,11 @@ form textarea {
   resize: none;
 }
 form button {
+  
   position: absolute;
   right: 18px;
   bottom: -34px;
-  background: #f5ba13;
-  color: #fff;
+  background: #67b7d6;
   border: none;
   border-radius: 50%;
   width: 72px;
@@ -100,14 +148,16 @@ form select {
 .date-container {
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  gap: 2em;
+  justify-content: center;
+  gap: 1em;
+  width: 100%;
+  max-width: 400px;
 }
 
 #date {
-  font-size: 1.25rem;
   font-weight: 600;
-  margin: 0.25em;
+  margin: 0 1em;
+
 }
 
 .ToD-title {
@@ -123,9 +173,13 @@ form select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: lightgoldenrodyellow;
+  background-color: #c5dbda;
   border: solid black 1px;
   cursor: default;
+}
+
+.box p{
+  font-size: 1rem;
 }
 
 .food-type-container {
@@ -151,13 +205,15 @@ form select {
 }
 
 .selected {
-  background-color: yellow;
+  background-color: #7ecbe2;
 }
 
 .entry-container {
   margin: 1em auto;
   border: solid black 1px;
-  background-color: yellow;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  background-color: #b3deeb;
   max-width: 400px;
   height: 100px;
   display: flex;
@@ -182,10 +238,10 @@ form select {
 .delete-btn {
   position: absolute;
   right: -18px;
-  background: #f5ba13;
-  color: #fff;
+  background: #bcd6dd;
   border: none;
   border-radius: 50%;
+  border-style: none;
   width: 36px;
   height: 36px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -193,16 +249,14 @@ form select {
   outline: none;
 }
 
-#dropdown{
-  position:absolute;
-  left:10px;
-  top: 10px; 
-
-  width: 130px;
-  padding: 0.25em;
-}
 
 @media (min-width: 1000px) {
+  
+  .date-btn p{
+    top: 0;
+    position:absolute;
 
+  }
+  
 
 }

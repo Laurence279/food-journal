@@ -285,6 +285,7 @@ function App() {
   const [showPass, setShowPass] = useState(false);
   const [showUpdates, setShowUpdates] = useState(false);
   const [attemptedUser, setAttemptedUser] = useState("")
+  const [hideContent, setHideContent] = useState(true);
   
   function handleClose(){
     setShow(false);
@@ -364,6 +365,7 @@ async function submitUserPass(username, password){
 const isAuthed = await response.json();
 if(isAuthed.auth){
   dispatch({type: types.USERNAME, value: username})
+  setHideContent(false)
   setDropdownValue(username);
   handleClosePass()
 }
@@ -375,8 +377,9 @@ else{
     
         <div>
         <header>
+        <div>
         <Dropdown handleChange={handleChange} users={state.users}/>
-        <button className="p-1" id="update-btn" onClick={handleShowUpdates}>Update Notes!</button>
+        {/* <button className="p-1" id="update-btn" onClick={handleShowUpdates}>v1.0</button>
 
 
         <Modal show={showUpdates} onHide={handleCloseUpdates}>
@@ -394,16 +397,18 @@ else{
               Close
             </Button>
           </Modal.Footer>
-        </Modal>
+        </Modal> */}
 
 
-            <h1>Dietary Journal</h1>
-            <h3>{state.username}</h3>
+            <h1 id="title">Food Journal</h1>
+        </div>
+       
+            <h3>{state.username || "Please Select a User.."}</h3>
 
-            <Day  date={state.date} onPrev={onPrev} onNext={onNext} />
+            <Day hidden={hideContent} date={state.date} onPrev={onPrev} onNext={onNext} />
 
         </header>
-        <div id="content-wrap">
+        <div hidden={hideContent} id="content-wrap">
         <PasswordUser show={showPass} username={attemptedUser} handleShow={handleShowPass} handleClose={handleClosePass} submit={submitUserPass}/>
         <InputUser show={show} handleShow={handleShow} handleClose={handleClose} submitUser={submitUser}/>
         <h2 className="is-empty">{isEmpty}</h2>
