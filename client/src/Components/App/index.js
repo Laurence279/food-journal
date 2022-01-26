@@ -8,6 +8,8 @@ import Dropdown from "../Dropdown"
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Button} from 'react-bootstrap'
+import LoginButton from "../LoginButton"
+import LogoutButton from "../LogoutButton";
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
@@ -378,34 +380,20 @@ else{
         <div>
         <header>
         <div>
-        <Dropdown handleChange={handleChange} users={state.users}/>
-        {/* <button className="p-1" id="update-btn" onClick={handleShowUpdates}>v1.0</button>
-
-
-        <Modal show={showUpdates} onHide={handleCloseUpdates}>
-          <Modal.Header closeButton>
-            <Modal.Title>Update Notes</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-          <h5>Version 1.0</h5>
-          <h6>22/01/2022</h6>
-          <br/>
-          <p>Added passwords for users. Had to delete all usernames, so you'll need to re-create yours again, sorry! I still have your old entries, so they aren't lost, I will write them in manually after I see you've set a password to your name. Happy journaling! :)</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseUpdates}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal> */}
+        {/* <Dropdown handleChange={handleChange} users={state.users}/> */}
 
 
             <h1 id="title">Food Journal</h1>
         </div>
        
-            <h3>{state.username || "Please Select a User.."}</h3>
+            <h3>{state.username || "Please Login to Continue.."}</h3>
 
             <Day hidden={hideContent} date={state.date} onPrev={onPrev} onNext={onNext} />
+
+<div>
+<LoginButton/>
+<LogoutButton/>
+</div>
 
         </header>
         <div hidden={hideContent} id="content-wrap">
