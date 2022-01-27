@@ -326,7 +326,7 @@ if(isLoading){
         <div>
         <header>
         <div>
-            <h1 id="title">Food Journal</h1>
+            <h1 id="title">🍎 Food Journal</h1>
         </div>
 {isAuthenticated && (
   <h3 id="username-display">{state.username}</h3>
