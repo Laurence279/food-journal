@@ -10,6 +10,8 @@ ReactDOM.render(
   domain="dev-ldock2kl.us.auth0.com"
   clientId="U7YagI2I4d6mVU3FTj50W3ueRKAyw5In"
   redirectUri={window.location.origin}
+  audience="https://dev-ldock2kl.us.auth0.com/api/v2/"
+  scope="read:current_user"
 >
   <React.StrictMode>
     <App />

@@ -278,11 +278,39 @@ function App() {
 
   const [hideContent, setHideContent] = useState(true);
 
-const { user, isAuthenticated, isLoading } = useAuth0();
+const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+
+
+
 
 useEffect( () => {
   if(isAuthenticated){
-    dispatch({type: types.USERNAME, value: user.nickname})
+    const getUsername = async () => {
+      const domain = "dev-ldock2kl.us.auth0.com";
+  
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: `https://${domain}/api/v2/`,
+          scope: "read:current_user",
+        });
+  
+        const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
+  
+        const metadataResponse = await fetch(userDetailsByIdUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+  
+        const data = await metadataResponse.json();
+        dispatch({type: types.USERNAME, value: data.username})
+      } catch (e) {
+        console.log(e.message);
+      }
+
+    };
+    getUsername();
+
   }
 
 }, [isAuthenticated]);
@@ -301,7 +329,7 @@ if(isLoading){
             <h1 id="title">Food Journal</h1>
         </div>
 {isAuthenticated && (
-  <h3>{user.nickname}</h3>
+  <h3 id="username-display">{state.username}</h3>
 )}
 
 {!isAuthenticated && (

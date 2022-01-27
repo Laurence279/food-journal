@@ -9,7 +9,6 @@ html {
 body {
   background: #eee;
   overflow-x: hidden;
-
 }
 
 p,
@@ -30,6 +29,11 @@ h4 {
   top:0;
   margin: 0.5em 0.75em;
   left: 0;
+}
+
+#username-display{
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
 #login-container{
