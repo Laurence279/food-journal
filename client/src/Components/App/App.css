@@ -9,6 +9,7 @@ html {
 body {
   background: #eee;
   overflow-x: hidden;
+
 }
 
 p,
@@ -19,6 +20,10 @@ h4 {
   text-align: center;
 }
 
+#welcome-title{
+  margin:2em 0.5em;
+}
+
 #title{
   font-size: 1.375rem;
   position:absolute;
@@ -27,18 +32,50 @@ h4 {
   left: 0;
 }
 
-#dropdown{
+#login-container{
   position:absolute;
+  display:flex;
+  gap:1em;
   right:10px;
   top: 10px; 
-  border: solid black 1px;
-  width: 130px;
-  padding: 0.25em;
-  background-color:#94c4d3;
-  font-size: 0.875rem;
 }
 
+#images{
+  margin-top: 4em;
+  display:flex;
+  flex-direction: column;
+  gap:2em;
+  justify-content: center;
+  align-items: center;
+}
+#images div{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 350px;
+  height:auto;
+  margin: 0 1em;
+}
 
+#images img{
+  object-fit: contain;
+  width: 100%;
+  height:auto;
+}
+#images h4{
+  font-weight: 600;
+  height: 80px;
+}
+
+#main-btn-container{
+  text-align: center;
+  margin: 3em 0;
+}
+
+#loading{
+  margin-top:3em;
+  text-align: center;
+}
 
 header {
   position:relative;
@@ -255,8 +292,51 @@ form select {
   .date-btn p{
     top: 0;
     position:absolute;
-
+  }
+  #login-container{
+    position:absolute;
+    display:flex;
+    gap:1em;
+    right:10px;
+    top: 10px; 
   }
   
+  #images{
+    margin-top: 6em;
+    display:flex;
+    flex-direction: row;
+    gap:4em;
+    justify-content: center;
+  }
+  #images div{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 350px;
+    height:auto;
+    margin: 0 1em;
+  }
+  
+  #images img{
+    object-fit: contain;
+    width: 100%;
+    height:auto;
+  }
+  #images h4{
+    margin: 1em 0;
+    font-weight: 600;
+    max-width: 75%;
+    height: 100px;
+  }
+  
+  #main-btn-container{
+    text-align: center;
+    margin-top: 3em;
+  }
+  
+  #loading{
+    margin-top:3em;
+    text-align: center;
+  }
 
 }

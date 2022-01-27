@@ -27,7 +27,7 @@ function InputUser({show, handleClose, submitUser}) {
   
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Welcome! What's your name?</Modal.Title>
+            <Modal.Title>Welcome! Please create a username..</Modal.Title>
           </Modal.Header>
           <Modal.Body className="d-flex align-items-center flex-column">
             <label className="px-2 lead"  htmlFor="username-input">Name: </label> 
