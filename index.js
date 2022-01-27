@@ -20,7 +20,6 @@ mongoose.connect(`mongodb+srv://Laur:${process.env.P}@cluster0.lsmiq.mongodb.net
 
 const DietJournalSchema = new mongoose.Schema({
   user: String,
-  password: String,
   days: [{
     date: String,
     morning: [],
@@ -39,22 +38,12 @@ const JournalUser = new mongoose.model('JournalUser', DietJournalSchema);
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-// User Auth.. 
-
-app.post('/api/auth', async (req,res) => {
-  const auth = await checkPassword(req.body.username, req.body.password)
-  res.json({auth: auth})
-})
-
-async function checkPassword(user, password) {
-  const username = await JournalUser.findOne({user:user})
-  if(!username.password) return console.warn("User or password not found")
-  const hash = username.password
-  const passwordCheck = await bcrypt.compareSync(password, hash);
-  return passwordCheck;
-}
-
 // Fetch all users...
+
+app.get('/api/deletelaur', async(req,res)=>{
+  await JournalUser.deleteMany({user: "Laurence Nunn"})
+  res.json({})
+})
 
 app.get('/api/users', async (req, res) => {
   const results = await JournalUser.find({})
@@ -77,22 +66,33 @@ app.get('/api/:user', async (req, res) => {
 
 
   const response = await JournalUser.findOne({user:userToFind})
+  if(response === null){
+     const newUser = await createUser(userToFind)
+     const {id, user, days} = newUser;
+     res.json({id,user,days})
+     return
+  }
   const {id, user, days} = response
   res.json({id,user,days});
 });
 
 
 
-
+async function createUser(name){
+  const user = await new JournalUser(
+    {
+      user: name,
+      days: []
+    })
+  user.save();
+  return user;
+}
 
 // Create new user..
 app.post('/api/', async (req,res)=>{
-      // Hash password
-      const password = bcrypt.hashSync(req.body.password, saltRounds);
   const user = await new JournalUser(
     {
       user: req.body.user,
-      password: password,
       days: []
     })
   user.save();
@@ -104,7 +104,6 @@ app.post('/api/', async (req,res)=>{
 // Update an entry for a user..
 
 app.post('/api/:user', async (req,res) => {
-  console.log("Post request received")
   const user = req.params.user;
   const updatedDay = {
     date: req.body.date,

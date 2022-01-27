@@ -8,6 +8,12 @@ import Dropdown from "../Dropdown"
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Button} from 'react-bootstrap'
+import LoginButton from "../LoginButton"
+import { useAuth0 } from "@auth0/auth0-react";
+import LogoutButton from "../LogoutButton";
+import image1 from "../../images/pic1.png"
+import image2 from "../../images/pic2.png"
+import image3 from "../../images/pic3.png"
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
@@ -189,6 +195,7 @@ function App() {
       const data = await response.json()
       dispatch({type:types.UPDATE_TOTAL_ENTRIES, value: data.days})
       dispatch({type:types.ENTRIES_TODAY});
+      setHideContent(false)
     }
     fetchData()
 
@@ -269,148 +276,96 @@ function App() {
     dispatch({type: types.DATE, value: nextDayFromToday.toDateString()})
   }
 
-  function handleChange(event){
-    if(event.target.value === "new"){
-      handleShow()
-      event.target.value = "Select User"
-      return
-    }
-    setAttemptedUser(event.target.value);
-    setShowPass(true);
-    event.target.value = "Select User"
-  }
-
-
-  const [show, setShow] = useState(false);
-  const [showPass, setShowPass] = useState(false);
-  const [showUpdates, setShowUpdates] = useState(false);
-  const [attemptedUser, setAttemptedUser] = useState("")
   const [hideContent, setHideContent] = useState(true);
+
+const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+
+
+
+
+useEffect( () => {
+  if(isAuthenticated){
+    const getUsername = async () => {
+      const domain = "dev-ldock2kl.us.auth0.com";
   
-  function handleClose(){
-    setShow(false);
-
-  } 
-  function handleShow(){
-    setShow(true);
-  } 
-
-  function handleClosePass(){
-    setShowPass(false);
-
-  } 
-  function handleShowPass(){
-    setShowPass(true);
-  } 
-  function handleCloseUpdates(){
-    setShowUpdates(false);
-
-  } 
-  function handleShowUpdates(){
-    setShowUpdates(true);
-  } 
-
-  async function submitUser(name, password){
-        //Post request to server
-        if(state.users.includes(name)){
-          throw new Error("Username already exists!")
-        } 
-        const response = await fetch(`http://localhost:3000/api/`, {
-          method: `POST`,
-          body: JSON.stringify({
-              user: name,
-              password: password
-          }),
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: `https://${domain}/api/v2/`,
+          scope: "read:current_user",
+        });
+  
+        const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
+  
+        const metadataResponse = await fetch(userDetailsByIdUrl, {
           headers: {
-              'content-type': 'application/json'
-          }
-      });
-      handleClose()
-      await fetchUsers()
-      dispatch({type: types.USERNAME, value: name})
-      setDropdownValue(name);
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+  
+        const data = await metadataResponse.json();
+        dispatch({type: types.USERNAME, value: data.username})
+      } catch (e) {
+        console.log(e.message);
+      }
+
+    };
+    getUsername();
+
   }
 
-  function setDropdownValue(name){
+}, [isAuthenticated]);
 
-     const options = document.querySelector("#dropdown").options;
-    for(let i = 0; i < options.length; i++){
-      console.log(options[i].value, name)
-      if(options[i].value === name){
 
-        options[i].selected = true
-        console.log("found");
-        return;
-      }
-  } 
-    
+if(isLoading){
+  return (<h1 id="loading">One moment please...</h1>)
+
 }
 
-
-
-
-
-async function submitUserPass(username, password){
-  //Post request to server
-  const response = await fetch(`http://localhost:3000/api/auth`, {
-    method: `POST`,
-    body: JSON.stringify({
-        username: username,
-        password: password
-          }),
-    headers: {
-        'content-type': 'application/json'
-    }
-});
-const isAuthed = await response.json();
-if(isAuthed.auth){
-  dispatch({type: types.USERNAME, value: username})
-  setHideContent(false)
-  setDropdownValue(username);
-  handleClosePass()
-}
-else{
-  throw new Error("Incorrect Password.")
-}
-}
     return (
     
         <div>
         <header>
         <div>
-        <Dropdown handleChange={handleChange} users={state.users}/>
-        {/* <button className="p-1" id="update-btn" onClick={handleShowUpdates}>v1.0</button>
-
-
-        <Modal show={showUpdates} onHide={handleCloseUpdates}>
-          <Modal.Header closeButton>
-            <Modal.Title>Update Notes</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-          <h5>Version 1.0</h5>
-          <h6>22/01/2022</h6>
-          <br/>
-          <p>Added passwords for users. Had to delete all usernames, so you'll need to re-create yours again, sorry! I still have your old entries, so they aren't lost, I will write them in manually after I see you've set a password to your name. Happy journaling! :)</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseUpdates}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal> */}
-
-
             <h1 id="title">Food Journal</h1>
         </div>
-       
-            <h3>{state.username || "Please Select a User.."}</h3>
+{isAuthenticated && (
+  <h3 id="username-display">{state.username}</h3>
+)}
 
+{!isAuthenticated && (
+  <h3 id="welcome-title">Simple, user-friendly <strong>Food Journaling</strong>.</h3>
+)}
             <Day hidden={hideContent} date={state.date} onPrev={onPrev} onNext={onNext} />
 
+<div id="login-container">
+<LoginButton size="sm" text="Log in" hidden={hideContent}/>
+<LogoutButton size="sm" hidden={hideContent}/>
+</div>
+
         </header>
+        <div hidden={!hideContent} id="images">
+        <div>
+        <h4>Easily go back and add entries to any date...</h4>
+        <img src={image1} alt="image2"></img>
+        </div>
+  <div>
+  <h4>Quickly add categories and descriptions...</h4>
+  <img src={image2} alt="image1"></img>
+  </div>
+  <div>
+  <h4>Erase your bad decisions from history...</h4>
+  <img src={image3} alt="image3"></img>
+
+  </div>
+
+
+        </div>
+        <div id="main-btn-container">
+        <LoginButton size="lg" text="Log In or Sign Up" hidden={hideContent}/>
+        </div>
+
         <div hidden={hideContent} id="content-wrap">
-        <PasswordUser show={showPass} username={attemptedUser} handleShow={handleShowPass} handleClose={handleClosePass} submit={submitUserPass}/>
-        <InputUser show={show} handleShow={handleShow} handleClose={handleClose} submitUser={submitUser}/>
+
         <h2 className="is-empty">{isEmpty}</h2>
         <TimeOfDay whenDeleted={deleteEntry} entryList={state.entriesToday.morning} time="Morning"/>
         <TimeOfDay whenDeleted={deleteEntry} entryList={state.entriesToday.afternoon} time="Afternoon"/>
