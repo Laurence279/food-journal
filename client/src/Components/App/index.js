@@ -14,6 +14,7 @@ import LogoutButton from "../LogoutButton";
 import image1 from "../../images/pic1.png"
 import image2 from "../../images/pic2.png"
 import image3 from "../../images/pic3.png"
+import { Loading } from 'react-loading-dot'
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
@@ -317,7 +318,7 @@ useEffect( () => {
 
 
 if(isLoading){
-  return (<h1 id="loading">One moment please...</h1>)
+  return (<div><Loading/></div>)
 
 }
 
