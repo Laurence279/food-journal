@@ -6,6 +6,7 @@ const cors = require('cors');
 require('dotenv').config()
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const URL_VALIDATION = ["localhost:48752", "whatdidieat.herokuapp.com"]
 
 
 app.use(express.urlencoded({
