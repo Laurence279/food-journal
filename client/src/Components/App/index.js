@@ -40,10 +40,8 @@ const reducer = (state, action) => {
       return { ...state, date: action.value }
     case types.ENTRIES_TODAY: 
 
-    console.log("Looking for entries for " + state.date)
     const todaysEntry = findDateInEntries(state.entriesTotal, state.date)
     if(!todaysEntry) return state
-    console.log("Fetched entries...", todaysEntry)
     return {...state, entriesToday: todaysEntry}
 
     case types.ADD_ENTRY: // Add an entry to today's log
@@ -67,7 +65,6 @@ const reducer = (state, action) => {
         .slice(0, indexToRemoveDelEntry),...arrayToRemoveFrom.slice(indexToRemoveDelEntry + 1)]}}
     case types.UPDATE_TOTAL_ENTRIES: // Update all entries stored for this user..
   
-    console.log("Updating Total Entries", action.value)
         return {...state, entriesTotal: action.value}
 
     case types.UPDATE_ENTRY_IN_TOTAL_ENTRIES: // Update one entry inside total entries stored for this user..
@@ -111,7 +108,6 @@ async function updateEntry(user, entry){
         'content-type': 'application/json'
     }
 });
-console.log(response)
 }
 
 
@@ -164,7 +160,6 @@ function App() {
   
   
   const checkIfEntriesEmpty = useCallback(()=>{
-    console.log("running check if empty")
     if (
       state.entriesToday.morning.length === 0 &&
       state.entriesToday.afternoon.length === 0 &&
@@ -222,7 +217,6 @@ function App() {
     // Run when date is changed
 
     useEffect(()=>{
-      console.log("Date changed to " + state.date)
       dispatch({type:types.ENTRIES_TODAY});
     },[state.date])
     
@@ -230,7 +224,6 @@ function App() {
   //Run when today's entries change
 
   useEffect(()=>{
-    console.log("Today's entries changed", state.entriesToday)
     dispatch({type: types.UPDATE_ENTRY_IN_TOTAL_ENTRIES, value: state.entriesToday})
     setEmpty(checkIfEntriesEmpty());
   },[state.entriesToday, checkIfEntriesEmpty])
@@ -253,7 +246,6 @@ function App() {
   }
 
   function deleteEntry(item){
-    console.log(item)
     dispatch({type: types.DELETE_ENTRY, value: item})
   }
 
@@ -306,7 +298,7 @@ useEffect( () => {
         const data = await metadataResponse.json();
         dispatch({type: types.USERNAME, value: data.username})
       } catch (e) {
-        console.log(e.message);
+        console.error(e.message);
       }
 
     };

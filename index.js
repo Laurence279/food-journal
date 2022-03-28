@@ -38,12 +38,36 @@ const JournalUser = new mongoose.model('JournalUser', DietJournalSchema);
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-// Fetch all users...
+app.use(validate);
 
-app.get('/api/deletelaur', async(req,res)=>{
-  await JournalUser.deleteMany({user: "Laurence Nunn"})
-  res.json({})
-})
+async function validate(req, res, next){
+  const referer = req.headers.referer;
+  if(!referer)
+  {
+      res.status(401).send("Unauthorised")
+      return;
+  }
+  if(!isRefererValid(referer))
+  {
+      res.status(401).send("Unauthorised")
+      return;
+  }
+  next();
+}
+
+function isRefererValid(referer)
+{
+    let validated = false;
+    
+    URL_VALIDATION.forEach((string)=>{
+        if(referer.includes(string)) validated = true;
+    })
+    if(validated) console.log("User made a successful request from:", referer);
+    return validated
+}
+    
+
+// Fetch all users...
 
 app.get('/api/users', async (req, res) => {
   const results = await JournalUser.find({})
